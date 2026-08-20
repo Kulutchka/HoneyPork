@@ -3,15 +3,15 @@ from __future__ import annotations
 
 SSH_BANNER = "Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-91-generic x86_64)"
 TELNET_BANNER = "Ubuntu 20.04.6 LTS"
-PROMPT = "root@honeypot:~# "
+PROMPT = "root@investment:~# "
 
 _COMMAND_OUTPUTS = {
     "id": "uid=0(root) gid=0(root) groups=0(root)",
     "whoami": "root",
-    "hostname": "honeypot",
+    "hostname": "investment",
     "pwd": "/root",
-    "uname": "Linux honeypot 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 7 09:00:00 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux",
-    "uname -a": "Linux honeypot 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 7 09:00:00 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux",
+    "uname": "Linux investment 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 7 09:00:00 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux",
+    "uname -a": "Linux investment 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 7 09:00:00 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux",
     "uname -m": "x86_64",
     "cat /etc/os-release": 'NAME="Ubuntu"\nVERSION="20.04.6 LTS (Focal Fossa)"\nID=ubuntu\n',
     "ls": "backup.sql\ncredentials.txt\ncustomer_data.csv\nREADME.txt\nwebapp\n.ssh",
@@ -31,7 +31,7 @@ _COMMAND_OUTPUTS = {
         "www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\n"
         "mysql:x:110:113:MySQL Server:/nonexistent:/bin/false\n"
     ),
-    "cat /etc/shadow": "root:$6$rounds=656000$honeypotsalt$00000000000000000000000000000000000000000000000000000:19602:0:99999:7:::\n",
+    "cat /etc/shadow": "root:$6$rounds=656000$investmentsalt$00000000000000000000000000000000000000000000000000000:19602:0:99999:7:::\n",
     "cat credentials.txt": "admin / Sup3rSecret!2023\n",
     "w": " 09:14:23 up 214 days,  3:42,  1 user,  load average: 0.00, 0.01, 0.00\nUSER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT\nroot     pts/0    10.0.0.5         09:14    0.00s  0.02s  0.00s w\n",
     "ps aux": (
