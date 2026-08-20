@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Runtime data (SQLite db, certs, decoy files)
+data/
+
+# Secrets
+.env

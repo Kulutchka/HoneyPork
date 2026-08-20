@@ -1,0 +1,26 @@
+# Web / dashboard
+fastapi>=0.110
+uvicorn[standard]>=0.29
+jinja2>=3.1
+python-multipart>=0.0.9
+itsdangerous>=2.1
+
+# Data
+aiosqlite>=0.20
+
+# Async HTTP client (Telegram)
+httpx>=0.27
+
+# Auth / crypto
+bcrypt>=4.1
+cryptography>=42.0
+pydantic-settings>=2.2
+
+# Honeypot emulators
+asyncssh>=2.14
+aiohttp>=3.9
+telnetlib3>=2.0
+pyftpdlib>=1.5
+
+# IDS
+scapy>=2.5

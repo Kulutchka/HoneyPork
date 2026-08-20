@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HoneyPork</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("honeypork-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="logo-bar">
+    <a href="/" class="brand" title="HoneyPork">
+      <img src="/static/logo_transparent.png" alt="HoneyPork">
+    </a>
+  </div>
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="meta">logged in as <strong>{{ user }}</strong></span>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="/logout">Log out</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid stats" id="stats"></div>
+
+    <h2 class="section-title">Honeypot Services</h2>
+    <div class="grid services" id="services"></div>
+
+    <h2 class="section-title">Telegram Alerts</h2>
+    <div class="card">
+      <div class="two-col">
+        <div>
+          <div class="field">
+            <label for="tg-token">Bot token</label>
+            <input id="tg-token" type="password" placeholder="123456:ABC-DEF..." autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="tg-chat">Chat ID</label>
+            <input id="tg-chat" type="text" placeholder="123456789" autocomplete="off">
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="tg-save">Save</button>
+            <button class="btn" id="tg-test">Send test alert</button>
+            <span class="muted" id="tg-status"></span>
+          </div>
+        </div>
+        <div class="muted" style="font-size:13px">
+          <p>Create a bot with <a href="https://t.me/BotFather" target="_blank">@BotFather</a>,
+          copy the token here, then send your bot any message and get your chat ID from
+          <code>https://api.telegram.org/bot&lt;token&gt;/getUpdates</code>.</p>
+          <p>Alerts are rate-limited per source IP to avoid flooding.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Alerts</h2>
+    <div class="card">
+      <div class="toolbar">
+        <button class="btn" id="alerts-ack-all">Acknowledge visible</button>
+        <label class="muted" style="font-size:13px">
+          <input type="checkbox" id="alerts-unacked"> show unacknowledged only
+        </label>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="alerts-table">
+          <thead><tr><th>Time</th><th>Severity</th><th>Type</th><th>Source</th><th>Description</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="section-title">Captured Credentials</h2>
+    <div class="card">
+      <div style="overflow-x:auto">
+        <table id="creds-table">
+          <thead><tr><th>Time</th><th>Service</th><th>Source</th><th>Username</th><th>Secret</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="section-title">Events</h2>
+    <div class="card">
+      <div style="overflow-x:auto">
+        <table id="events-table">
+          <thead><tr><th>Time</th><th>Service</th><th>Source</th><th>Type</th><th>Details</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

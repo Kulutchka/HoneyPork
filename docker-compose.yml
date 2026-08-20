@@ -1,0 +1,39 @@
+services:
+  honeypork:
+    build: .
+    container_name: honeypork
+    restart: unless-stopped
+    ports:
+      - "8080:8080"     # dashboard
+      - "21:21"         # FTP
+      - "22:22"         # SSH
+      - "23:23"         # Telnet
+      - "80:80"         # HTTP
+      - "443:443"       # HTTPS
+      - "1433:1433"     # MSSQL
+      - "3306:3306"     # MySQL
+      - "3389:3389"     # RDP
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+
+  # Passive packet sniffer. Requires host networking + raw socket access, which
+  # only works on Linux. On macOS, run `sudo python -m app.ids.sniffer` natively
+  # instead. Started explicitly with: docker compose --profile ids up ids
+  ids:
+    build: .
+    container_name: honeypork-ids
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    command: ["python", "-m", "app.ids.sniffer"]
+    profiles: ["ids"]
+    depends_on:
+      - honeypork
