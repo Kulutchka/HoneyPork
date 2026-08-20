@@ -47,6 +47,7 @@ class MSSQLHoneypot(BaseHoneypot):
             ptype, _full = await self._read_packet(reader)
             if ptype == 0x12:  # PRELOGIN
                 self._send_prelogin_response(writer)
+                await writer.drain()
             ptype, full = await self._read_packet(reader)
             if ptype == 0x10:  # LOGIN7
                 hostname, username, password = self._parse_login7(full)
@@ -64,6 +65,7 @@ class MSSQLHoneypot(BaseHoneypot):
                 self._send_error(
                     writer, 18456, f"Login failed for user '{username or 'unknown'}'."
                 )
+                await writer.drain()
         except Exception:  # noqa: BLE001
             log.debug("mssql handshake error from %s", ip, exc_info=True)
         finally:
@@ -93,12 +95,13 @@ class MSSQLHoneypot(BaseHoneypot):
 
     def _send_prelogin_response(self, writer) -> None:
         version = bytes([0x0F, 0x00, 0x0C, 0xB0, 0x00, 0x00])  # SQL Server 2016
-        encryption = b"\x00"  # not required -> client sends plaintext-obfuscated pwd
-        instopt = b""
+        # ENCRYPT_NOT_SUP (0x02): tell the client we do not support TLS, so it
+        # sends LOGIN7 (including the obfuscated password) in plaintext.
+        encryption = b"\x02"
+        instopt = b"\x00"  # instance matches client request
         threadid = b"\x00\x00\x00\x00"
-        mars = b"\x00"
-        blobs = [version, encryption, instopt, threadid, mars]
-        opt_types = [0x00, 0x01, 0x02, 0x03, 0x04]
+        blobs = [version, encryption, instopt, threadid]
+        opt_types = [0x00, 0x01, 0x02, 0x03]
 
         base = len(opt_types) * 5 + 1  # token area + 0xFF terminator
         tokens = b""
@@ -112,6 +115,8 @@ class MSSQLHoneypot(BaseHoneypot):
     def _parse_login7(self, full: bytes) -> tuple[str, str, str]:
         if len(full) < 44:
             return "", "", ""
+        # Offset/length pairs begin after the 8-byte TDS header + 36-byte fixed
+        # LOGIN7 header.
         off = 44
 
         def pair() -> tuple[int, int]:
@@ -135,7 +140,9 @@ class MSSQLHoneypot(BaseHoneypot):
             if l == 0:
                 return b""
             try:
-                return full[o : o + l]
+                # LOGIN7 offsets are relative to the LOGIN7 payload (i.e. after
+                # the 8-byte TDS header), and lengths are in UTF-16LE characters.
+                return full[o + 8 : o + 8 + l * 2]
             except Exception:  # noqa: BLE001
                 return b""
 
@@ -159,5 +166,7 @@ class MSSQLHoneypot(BaseHoneypot):
             + b"\x00"  # proc name len
             + (1).to_bytes(4, "little")
         )
+        # ERROR token (0xAA) carried in a TABULAR response packet (type 0x04)
+        # with the EOM (end-of-message) status bit set.
         body = b"\xaa" + len(inner).to_bytes(2, "little") + inner
-        writer.write(self._wrap(0xAA, 0xE1, body))
+        writer.write(self._wrap(0x04, 0x01, body))
