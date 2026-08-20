@@ -1,4 +1,4 @@
-# HoneyPork — Honeypot + IDS
+# HoneyPork -- Honeypot + IDS
 
 A self-hosted honeypot and intrusion detection system written in Python. It
 emulates eight common network services, passively detects network scans, exposes
@@ -37,16 +37,16 @@ every interaction in SQLite.
 
 ## Features
 
-- **8 emulated services** — FTP, SSH, Telnet, HTTP, HTTPS, MySQL, MSSQL, RDP
-- **Interactive decoys** — fake shells (SSH/Telnet), a decoy file tree (FTP),
+- **8 emulated services** -- FTP, SSH, Telnet, HTTP, HTTPS, MySQL, MSSQL, RDP
+- **Interactive decoys** -- fake shells (SSH/Telnet), a decoy file tree (FTP),
   decoy web pages (HTTP/HTTPS), and wire-protocol handshakes (MySQL/MSSQL/RDP)
-- **Credential capture** — usernames, plaintext passwords, auth hashes, and SSH
+- **Credential capture** -- usernames, plaintext passwords, auth hashes, and SSH
   public keys
-- **Command & session capture** — every shell command and session duration
-- **IDS** — passive detection of TCP SYN scans, port sweeps, and SYN floods
+- **Command & session capture** -- every shell command and session duration
+- **IDS** -- passive detection of TCP SYN scans, port sweeps, and SYN floods
   (scapy)
-- **Telegram alerts** — configurable bot with per-source-IP rate limiting
-- **Web dashboard** — authenticated console to toggle services, view live
+- **Telegram alerts** -- configurable bot with per-source-IP rate limiting
+- **Web dashboard** -- authenticated console to toggle services, view live
   events/credentials/alerts, and configure Telegram
 - **SQLite** storage, zero-config single file
 - **Docker Compose** deployment, with a native (non-Docker) mode
@@ -121,7 +121,7 @@ docker compose --profile ids up -d ids
 ```
 
 The sniffer needs `network_mode: host` + `NET_RAW`, which Docker Desktop on
-macOS/Windows does not support — see [Platform notes](#platform-notes).
+macOS/Windows does not support -- see [Platform notes](#platform-notes).
 
 ## Native install
 
@@ -153,19 +153,19 @@ stored in the SQLite `settings` table and editable from the dashboard.
 | `DASHBOARD_TLS` | `false` | Serve the dashboard over TLS |
 | `ADMIN_USERNAME` | `admin` | Dashboard login username |
 | `ADMIN_PASSWORD` | `changeme` | Dashboard login password (bcrypt-hashed on first run) |
-| `SECRET_KEY` | — | Session cookie signing key — **change this** |
+| `SECRET_KEY` | -- | Session cookie signing key -- **change this** |
 | `DATA_DIR` | `data` | Directory for the DB, certs and decoy files |
 | `DB_FILENAME` | `honeypork.db` | SQLite database file name |
 | `HONEYPOT_HOST` | `0.0.0.0` | Bind address for all honeypots |
-| `FTP_ENABLED` … `RDP_ENABLED` | `true` | Per-service enable flag |
-| `FTP_PORT` … `RDP_PORT` | — | Per-service listen port |
+| `FTP_ENABLED` ... `RDP_ENABLED` | `true` | Per-service enable flag |
+| `FTP_PORT` ... `RDP_PORT` | -- | Per-service listen port |
 | `IDS_ENABLED` | `false` | Start the sniffer inside the main process |
-| `IDS_INTERFACE` | — | Network interface to sniff (blank = default) |
+| `IDS_INTERFACE` | -- | Network interface to sniff (blank = default) |
 | `SCAN_WINDOW_SECONDS` | `30` | Sliding window for scan detection |
 | `SCAN_PORT_THRESHOLD` | `8` | Distinct ports per window to flag a port scan |
 | `SYN_FLOOD_THRESHOLD` | `100` | SYNs per window to flag a SYN flood |
-| `TELEGRAM_BOT_TOKEN` | — | Telegram bot token |
-| `TELEGRAM_CHAT_ID` | — | Telegram chat ID |
+| `TELEGRAM_BOT_TOKEN` | -- | Telegram bot token |
+| `TELEGRAM_CHAT_ID` | -- | Telegram chat ID |
 | `TELEGRAM_NOTIFY_CONNECTION` | `true` | Alert on new connections |
 | `TELEGRAM_NOTIFY_CREDENTIAL` | `true` | Alert on captured credentials |
 | `TELEGRAM_NOTIFY_SCAN` | `true` | Alert on scan/attack detection |
@@ -195,7 +195,7 @@ The decoy content (fake files, command outputs, web pages, banners) lives in
 3. Enter both in the dashboard (or `.env`) and click **Send test alert**.
 
 Alerts are sent for new connections, captured credentials, and detected
-scans — each rate-limited per source IP (`TELEGRAM_COOLDOWN_SECONDS`) to prevent
+scans -- each rate-limited per source IP (`TELEGRAM_COOLDOWN_SECONDS`) to prevent
 flooding during a sweep.
 
 ## Intrusion detection (IDS)
@@ -203,9 +203,9 @@ flooding during a sweep.
 The sniffer (`app/ids/sniffer.py`) captures TCP SYN packets with scapy and feeds
 them into a sliding-window detector (`app/ids/rules.py`) that flags:
 
-- **Port scan** — one source hitting `SCAN_PORT_THRESHOLD` distinct ports in a
+- **Port scan** -- one source hitting `SCAN_PORT_THRESHOLD` distinct ports in a
   window
-- **SYN flood** — one source sending `SYN_FLOOD_THRESHOLD` SYNs in a window
+- **SYN flood** -- one source sending `SYN_FLOOD_THRESHOLD` SYNs in a window
 
 Detected events are written to the `alerts` table and pushed to Telegram.
 
@@ -213,14 +213,14 @@ Detected events are written to the `alerts` table and pushed to Telegram.
 
 The dashboard (FastAPI + Jinja2 + vanilla JS/CSS) provides:
 
-- **Login** — bcrypt-hashed credentials with a signed session cookie
-- **Service grid** — toggle each of the 8 services on/off (applied live and
+- **Login** -- bcrypt-hashed credentials with a signed session cookie
+- **Service grid** -- toggle each of the 8 services on/off (applied live and
   persisted)
-- **Telegram panel** — set bot token + chat ID, send a test alert
-- **Alerts** — list, filter unacknowledged, acknowledge
-- **Credentials** — captured usernames/passwords/hashes
-- **Events** — full connection/request/command log
-- **Stats** — counts of events, credentials, sessions, and alerts
+- **Telegram panel** -- set bot token + chat ID, send a test alert
+- **Alerts** -- list, filter unacknowledged, acknowledge
+- **Credentials** -- captured usernames/passwords/hashes
+- **Events** -- full connection/request/command log
+- **Stats** -- counts of events, credentials, sessions, and alerts
 
 <p align="center">
   <img src="images/dashboard_screenshot.jpg" alt="HoneyPork dashboard" width="100%">
@@ -243,18 +243,18 @@ API endpoints (all require an authenticated session):
 
 SQLite tables (see [`app/db/queries.py`](app/db/queries.py)):
 
-- **events** — timestamp, source IP/port, dest port, service, event type, details (JSON)
-- **credentials** — timestamp, source IP, service, username, secret, extra (JSON)
-- **sessions** — timestamp, source IP, service, duration, commands (JSON)
-- **alerts** — timestamp, severity, type, source IP, description, acknowledged
-- **settings** — key/value store (service toggles, Telegram config)
+- **events** -- timestamp, source IP/port, dest port, service, event type, details (JSON)
+- **credentials** -- timestamp, source IP, service, username, secret, extra (JSON)
+- **sessions** -- timestamp, source IP, service, duration, commands (JSON)
+- **alerts** -- timestamp, severity, type, source IP, description, acknowledged
+- **settings** -- key/value store (service toggles, Telegram config)
 
 ## Platform notes
 
-- **Linux server/VPS (recommended)** — full functionality, including passive
+- **Linux server/VPS (recommended)** -- full functionality, including passive
   scan detection via host networking:
   `docker compose --profile ids up -d`.
-- **macOS / Windows (Docker Desktop)** — the honeypot container works via port
+- **macOS / Windows (Docker Desktop)** -- the honeypot container works via port
   mapping, but the *passive* sniffer cannot see host traffic through the Docker
   VM. Run the sniffer natively instead: `sudo python -m app.ids.sniffer`.
 
