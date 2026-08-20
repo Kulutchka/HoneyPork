@@ -89,8 +89,14 @@ class _FakeShell(asyncssh.SSHServerSession):
 
     def connection_made(self, chan) -> None:
         self._chan = chan
-        chan.write(decoy.SSH_BANNER + "\r\n")
-        chan.write(decoy.PROMPT)
+
+    def shell_requested(self) -> bool:
+        return True
+
+    def session_started(self) -> None:
+        if self._chan:
+            self._chan.write(decoy.SSH_BANNER + "\r\n")
+            self._chan.write(decoy.PROMPT)
 
     def data_received(self, data, datatype) -> None:
         self._buf += data
@@ -140,11 +146,11 @@ class SSHHoneypot(BaseHoneypot):
             key = asyncssh.generate_private_key("ssh-rsa", key_size=2048)
             key_path.write_bytes(key.export_private_key())
         self._server = await asyncssh.create_server(
-            _SSHServer,
+            lambda: _SSHServer(self),
             self.host,
             self.port,
             server_host_keys=[str(key_path)],
-            ssh_version=b"SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6",
+            server_version=b"SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6",
         )
         self._running = True
 
