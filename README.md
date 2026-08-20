@@ -223,7 +223,7 @@ The dashboard (FastAPI + Jinja2 + vanilla JS/CSS) provides:
 - **Stats** — counts of events, credentials, sessions, and alerts
 
 <p align="center">
-  <img src="images/dashboard_screenshot.jpg" alt="HoneyPork dashboard" width="480">
+  <img src="images/dashboard_screenshot.jpg" alt="HoneyPork dashboard" width="100%">
 </p>
 
 API endpoints (all require an authenticated session):
