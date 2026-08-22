@@ -1,8 +1,9 @@
 services:
   honeypork:
-    build: .
+    image: ghcr.io/kulutchka/honeypork:latest
     container_name: honeypork
     restart: unless-stopped
+    pull_policy: always
     ports:
       - "8002:8080"     # dashboard
       - "21:21"         # FTP
@@ -22,9 +23,10 @@ services:
   # only works on Linux. On macOS, run `sudo python -m app.ids.sniffer` natively
   # instead. Started explicitly with: docker compose --profile ids up ids
   ids:
-    build: .
+    image: ghcr.io/kulutchka/honeypork:latest
     container_name: honeypork-ids
     restart: unless-stopped
+    pull_policy: always
     network_mode: host
     cap_add:
       - NET_ADMIN

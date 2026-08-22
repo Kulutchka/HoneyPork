@@ -21,6 +21,7 @@ every interaction in SQLite.
 - [Features](#features)
 - [Architecture](#architecture)
 - [Quick start (Docker)](#quick-start-docker)
+- [Production deploy (GHCR)](#production-deploy-ghcr)
 - [Native install](#native-install)
 - [Configuration](#configuration)
 - [Emulated services](#emulated-services)
@@ -34,6 +35,20 @@ every interaction in SQLite.
 - [License](#license)
 
 ---
+
+
+## QUICK START
+
+Admin Password: changeme
+
+!!! Do not forget to change your password !!!
+
+```bash
+git clone https://github.com/Kulutchka/HoneyPork
+cd HoneyPork
+cp .env.example .env 
+docker compose -f docker-compose.prod.yml up -d
+```
 
 ## Features
 
@@ -122,6 +137,31 @@ docker compose --profile ids up -d ids
 
 The sniffer needs `network_mode: host` + `NET_RAW`, which Docker Desktop on
 macOS/Windows does not support -- see [Platform notes](#platform-notes).
+
+## Production deploy (GHCR)
+
+The [`build`](.github/workflows/build.yml) workflow builds and publishes the
+image to the GitHub Container Registry on every push to `main` and version tag
+as `ghcr.io/kulutchka/honeypork`. To deploy the prebuilt image instead of
+building it locally, use [`docker-compose.prod.yml`](docker-compose.prod.yml):
+
+```bash
+# 1. Authenticate to GHCR (packages are private by default)
+echo "$GITHUB_TOKEN" | docker login ghcr.io -u Kulutchka --password-stdin
+
+# 2. Configure
+cp .env.example .env
+# edit .env: set ADMIN_PASSWORD and SECRET_KEY (and TELEGRAM_BOT_TOKEN if desired)
+
+# 3. Run
+docker compose -f docker-compose.prod.yml up -d
+
+# Optional: start the IDS sniffer (Linux only)
+docker compose -f docker-compose.prod.yml --profile ids up -d ids
+```
+
+To pull without authentication, make the package public in the repo's package
+settings (`Packages` -> `Package settings` -> `Change visibility` -> `Public`).
 
 ## Native install
 
