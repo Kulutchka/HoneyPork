@@ -62,7 +62,7 @@ a:hover { text-decoration: underline; }
 .brand { display: inline-flex; align-items: center; text-decoration: none; }
 .brand img {
   display: block;
-  width: auto;
+  width: 175px;
   height: auto;
   max-width: 92vw;
 }
@@ -190,7 +190,7 @@ tr:hover td { background: var(--hover); }
 .login-logo-wrap { display: flex; justify-content: center; margin-bottom: 18px; }
 .login-logo-wrap img {
   display: block;
-  width: auto;
+  width: 175px;
   height: auto;
   max-width: 280px;
 }
