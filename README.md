@@ -111,7 +111,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-Open the dashboard at <http://localhost:8080> and log in with the credentials in
+Open the dashboard at <http://localhost:8002> and log in with the credentials in
 `.env` (default `admin` / `changeme`). The honeypot ports are mapped to the host:
 
 | Service | Port |
@@ -189,7 +189,7 @@ stored in the SQLite `settings` table and editable from the dashboard.
 | Variable | Default | Description |
 | --- | --- | --- |
 | `DASHBOARD_HOST` | `0.0.0.0` | Dashboard bind address |
-| `DASHBOARD_PORT` | `8080` | Dashboard port |
+| `DASHBOARD_PORT` | `8002` | Dashboard port |
 | `DASHBOARD_TLS` | `false` | Serve the dashboard over TLS |
 | `ADMIN_USERNAME` | `admin` | Dashboard login username |
 | `ADMIN_PASSWORD` | `changeme` | Dashboard login password (bcrypt-hashed on first run) |
